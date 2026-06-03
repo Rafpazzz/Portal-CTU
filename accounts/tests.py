@@ -51,6 +51,14 @@ class LoginViewTests(TestCase):
         self.assertNotContains(response, reverse('admin_config_home'))
         self.assertNotContains(response, 'Configurações')
 
+    def test_logout_redirects_to_home(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(reverse('logout'))
+
+        self.assertRedirects(response, reverse('home'))
+        self.assertFalse(get_user(self.client).is_authenticated)
+
 
 class AdminConfigTests(TestCase):
     def setUp(self):
