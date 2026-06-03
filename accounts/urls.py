@@ -8,4 +8,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('password_reset_form/', views.password_reset_form, name='password_reset_form'),
     path('perfil/', views.perfil, name='perfil'),
+    path('configuracao/', views.system_config_home, name='admin_config_home'),
+    path('configuracao/livros/', views.manage_books, name='admin_books'),
+    path('configuracao/usuarios/', views.manage_users, name='admin_users'),
 ]

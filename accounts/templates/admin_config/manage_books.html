@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Livros - Livros UESPI</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/admin_config.css' %}">
+</head>
+<body>
+    <nav class="admin-navbar">
+        <a href="{% url 'admin_config_home' %}" class="admin-brand">Configuracoes</a>
+        <div class="admin-navlinks">
+            <a href="{% url 'admin_config_home' %}">Painel</a>
+            <a href="{% url 'admin_users' %}">Usuarios</a>
+            <a href="{% url 'home' %}">Site</a>
+        </div>
+    </nav>
+
+    <main class="admin-page">
+        <section class="admin-header-row">
+            <div>
+                <span class="eyebrow">Catalogo</span>
+                <h1>Gerenciar livros</h1>
+            </div>
+            <a href="{% url 'admin_config_home' %}" class="secondary-link">Voltar ao painel</a>
+        </section>
+
+        {% if messages %}
+        <section class="messages">
+            {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="action-menu" aria-label="Menu de acoes de livros">
+            <a href="{% url 'admin_books' %}" class="{% if action == 'list' %}active{% endif %}">Listar</a>
+            <a href="{% url 'admin_books' %}?action=create" class="{% if action == 'create' %}active{% endif %}">Adicionar</a>
+        </section>
+
+        {% if action == 'create' or action == 'edit' %}
+        <section class="admin-panel">
+            <h2>{% if action == 'create' %}Adicionar livro{% else %}Editar livro{% endif %}</h2>
+            <form method="post" class="admin-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="{{ action }}">
+                {% if selected_book %}
+                    <input type="hidden" name="book_id" value="{{ selected_book.id }}">
+                {% endif %}
+
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                        {{ field }}
+                        {{ field.errors }}
+                    </label>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-button">Salvar</button>
+                    <a href="{% url 'admin_books' %}" class="secondary-button">Cancelar</a>
+                </div>
+            </form>
+        </section>
+        {% endif %}
+
+        {% if action == 'delete' and selected_book %}
+        <section class="admin-panel danger-panel">
+            <h2>Remover livro</h2>
+            <p>Confirme a remocao de <strong>{{ selected_book.titulo }}</strong>. As avaliacoes vinculadas tambem serao removidas.</p>
+            <form method="post" class="inline-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="book_id" value="{{ selected_book.id }}">
+                <button type="submit" class="danger-button">Remover definitivamente</button>
+                <a href="{% url 'admin_books' %}" class="secondary-button">Cancelar</a>
+            </form>
+        </section>
+        {% endif %}
+
+        <section class="admin-panel">
+            <h2>Livros cadastrados</h2>
+            <div class="responsive-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Titulo</th>
+                            <th>Autor</th>
+                            <th>Editora</th>
+                            <th>Ano</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td>{{ book.titulo }}</td>
+                            <td>{{ book.autor }}</td>
+                            <td>{{ book.editora }}</td>
+                            <td>{{ book.ano_publicacao }}</td>
+                            <td class="table-actions">
+                                <a href="{% url 'admin_books' %}?action=edit&book={{ book.id }}">Editar</a>
+                                <a href="{% url 'admin_books' %}?action=delete&book={{ book.id }}" class="danger-text">Remover</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">Nenhum livro cadastrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

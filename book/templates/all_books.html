@@ -20,6 +20,10 @@
             {% if user.is_authenticated %}
                 <span class="user-welcome">Olá, {{ user.username }}</span>
                 
+                {% if user.is_staff %}
+                    <a href="{% url 'admin_config_home' %}" class="nav-item btn-config">Configurações</a>
+                {% endif %}
+
                 <a href="{% url 'perfil' %}" class="nav-item">Meu Perfil</a>
                 
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">

@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Usuarios - Livros UESPI</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/admin_config.css' %}">
+</head>
+<body>
+    <nav class="admin-navbar">
+        <a href="{% url 'admin_config_home' %}" class="admin-brand">Configuracoes</a>
+        <div class="admin-navlinks">
+            <a href="{% url 'admin_config_home' %}">Painel</a>
+            <a href="{% url 'admin_books' %}">Livros</a>
+            <a href="{% url 'home' %}">Site</a>
+        </div>
+    </nav>
+
+    <main class="admin-page">
+        <section class="admin-header-row">
+            <div>
+                <span class="eyebrow">Acesso</span>
+                <h1>Gerenciar usuarios</h1>
+            </div>
+            <a href="{% url 'admin_config_home' %}" class="secondary-link">Voltar ao painel</a>
+        </section>
+
+        {% if messages %}
+        <section class="messages">
+            {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="action-menu" aria-label="Menu de acoes de usuarios">
+            <a href="{% url 'admin_users' %}" class="{% if action == 'list' %}active{% endif %}">Listar</a>
+            <a href="{% url 'admin_users' %}?action=create" class="{% if action == 'create' %}active{% endif %}">Adicionar</a>
+        </section>
+
+        {% if action == 'create' or action == 'edit' %}
+        <section class="admin-panel">
+            <h2>{% if action == 'create' %}Adicionar usuario{% else %}Editar usuario{% endif %}</h2>
+            <form method="post" class="admin-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="{{ action }}">
+                {% if selected_user %}
+                    <input type="hidden" name="user_id" value="{{ selected_user.id }}">
+                {% endif %}
+
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <label for="{{ field.id_for_label }}" class="{% if field.field.widget.input_type == 'checkbox' %}checkbox-label{% endif %}">
+                        {{ field.label }}
+                        {{ field }}
+                        {{ field.errors }}
+                    </label>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-button">Salvar</button>
+                    <a href="{% url 'admin_users' %}" class="secondary-button">Cancelar</a>
+                </div>
+            </form>
+        </section>
+        {% endif %}
+
+        {% if action == 'delete' and selected_user %}
+        <section class="admin-panel danger-panel">
+            <h2>Remover usuario</h2>
+            <p>Confirme a remocao de <strong>{{ selected_user.username }}</strong>. As avaliacoes desse usuario tambem serao removidas.</p>
+            <form method="post" class="inline-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="user_id" value="{{ selected_user.id }}">
+                <button type="submit" class="danger-button">Remover definitivamente</button>
+                <a href="{% url 'admin_users' %}" class="secondary-button">Cancelar</a>
+            </form>
+        </section>
+        {% endif %}
+
+        <section class="admin-panel">
+            <h2>Usuarios cadastrados</h2>
+            <div class="responsive-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Admin</th>
+                            <th>Ativo</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in users %}
+                        <tr>
+                            <td>{{ item.username }}</td>
+                            <td>{{ item.email|default:"-" }}</td>
+                            <td>{% if item.is_staff %}Sim{% else %}Nao{% endif %}</td>
+                            <td>{% if item.is_active %}Sim{% else %}Nao{% endif %}</td>
+                            <td class="table-actions">
+                                <a href="{% url 'admin_users' %}?action=edit&user={{ item.id }}">Editar</a>
+                                {% if item != user %}
+                                    <a href="{% url 'admin_users' %}?action=delete&user={{ item.id }}" class="danger-text">Remover</a>
+                                {% else %}
+                                    <span>Usuario atual</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">Nenhum usuario cadastrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

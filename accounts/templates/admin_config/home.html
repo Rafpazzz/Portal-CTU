@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuracoes - Livros UESPI</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/admin_config.css' %}">
+</head>
+<body>
+    <nav class="admin-navbar">
+        <a href="{% url 'home' %}" class="admin-brand">Livros UESPI</a>
+        <div class="admin-navlinks">
+            <a href="{% url 'home' %}">Inicio</a>
+            <a href="{% url 'perfil' %}">Perfil</a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Sair</button>
+            </form>
+        </div>
+    </nav>
+
+    <main class="admin-page">
+        <section class="admin-hero">
+            <div>
+                <span class="eyebrow">Area administrativa</span>
+                <h1>Configuracoes do sistema</h1>
+                <p>Escolha uma area para gerenciar os dados principais do Livros UESPI.</p>
+            </div>
+        </section>
+
+        {% if messages %}
+        <section class="messages">
+            {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="admin-grid">
+            <a href="{% url 'admin_books' %}" class="admin-card">
+                <span class="card-kicker">{{ books_count }} cadastrados</span>
+                <h2>Livros</h2>
+                <p>Adicionar, editar, consultar e remover livros do catalogo.</p>
+            </a>
+
+            <a href="{% url 'admin_users' %}" class="admin-card">
+                <span class="card-kicker">{{ users_count }} cadastrados</span>
+                <h2>Usuarios</h2>
+                <p>Adicionar, editar, consultar e remover usuarios do sistema.</p>
+            </a>
+        </section>
+    </main>
+</body>
+</html>
