@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as auth_login
+from django.utils.http import url_has_allowed_host_and_scheme
 from .admin import CustomUserCreationForm
 from django.contrib import messages
 from reviews.models import Review
@@ -22,17 +24,33 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 def login(request):
+    next_url = request.POST.get('next') or request.GET.get('next')
+
+    if request.user.is_authenticated:
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+            return redirect(next_url)
+        return redirect('home')
+
     if request.method == 'POST':
-        email = request.POST.get('username')
+        username_or_email = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=username_or_email, password=password)
+
+        if user is None:
+            User = get_user_model()
+            user_by_email = User.objects.filter(email__iexact=username_or_email).first()
+            if user_by_email is not None:
+                user = authenticate(request, username=user_by_email.username, password=password)
+
         if user is not None:
             auth_login(request, user)
-            return redirect('all_books')
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+                return redirect(next_url)
+            return redirect('home')
         else:
             messages.error(request, 'Invalid email or password')
             
-    return render(request, 'registration/login.html')
+    return render(request, 'registration/login.html', {'next': next_url})
 
 
 def password_reset_form(request):
