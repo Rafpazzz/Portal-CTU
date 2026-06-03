@@ -14,11 +14,11 @@ def search_book(request):
         messages.warning(request, "Voce precisa esta logado para fazer essa ação")
         return redirect('login')
     
-    query = request.GET.get('q')
+    query = request.GET.get('q', '').strip()
     if query:
         books = Books.objects.filter(titulo__icontains=query)
     else:
-        books = Books.objects.none()
+        books = Books.objects.all()
     return render(request, 'search_book.html', {'books': books, 'query': query})
 
 
