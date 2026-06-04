@@ -182,12 +182,13 @@ class AdminConfigTests(TestCase):
             'email': 'novo@example.com',
             'first_name': 'Novo',
             'last_name': 'Usuario',
-            'is_active': 'on',
-            'password1': 'senha-forte-123',
-            'password2': 'senha-forte-123',
+            'password': 'senha-forte-123',
         })
         self.assertRedirects(create_response, reverse('admin_users'))
         created_user = User.objects.get(username='novo_usuario')
+        self.assertTrue(created_user.is_active)
+        self.assertFalse(created_user.is_staff)
+        self.assertTrue(created_user.check_password('senha-forte-123'))
 
         edit_response = self.client.post(reverse('admin_users'), {
             'action': 'edit',
@@ -196,11 +197,12 @@ class AdminConfigTests(TestCase):
             'email': 'editado@example.com',
             'first_name': 'Usuario',
             'last_name': 'Editado',
-            'is_active': 'on',
+            'is_staff': 'on',
         })
         self.assertRedirects(edit_response, reverse('admin_users'))
         created_user.refresh_from_db()
         self.assertEqual(created_user.username, 'usuario_editado')
+        self.assertTrue(created_user.is_staff)
 
         delete_response = self.client.post(reverse('admin_users'), {
             'action': 'delete',
