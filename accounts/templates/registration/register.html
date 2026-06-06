@@ -29,6 +29,32 @@
             </div>
             {% endif %}
 
+            <label for="sexo">Sexo: </label>
+            <select id="sexo" name="sexo" required>
+                {% for value, label in form.sexo.field.choices %}
+                    <option value="{{ value }}" {% if form.sexo.value == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            {% if form.sexo.errors %}
+            <div class="error-msg">
+                {% for error in form.sexo.errors %}
+                <p>⚠️ {{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <label for="matricula">Matricula: </label>
+            <input type="text" id="matricula" name="matricula" placeholder="Matricula" value="{{ form.matricula.value|default:'' }}">
+
+            {% if form.matricula.errors %}
+            <div class="error-msg">
+                {% for error in form.matricula.errors %}
+                <p>⚠️ {{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <label for="">Password: </label>
             <input type="password" name="password1" placeholder="Password" required>
             

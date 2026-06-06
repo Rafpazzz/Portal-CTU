@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objetos Laboratorio - Livros UESPI</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/admin_config.css' %}">
+</head>
+<body>
+    <nav class="admin-navbar">
+        <a href="{% url 'admin_config_home' %}" class="admin-brand">Configuracoes</a>
+        <div class="admin-navlinks">
+            <a href="{% url 'admin_config_home' %}">Painel</a>
+            <a href="{% url 'admin_books' %}">Livros</a>
+            <a href="{% url 'admin_users' %}">Usuarios</a>
+            <a href="{% url 'home' %}">Site</a>
+        </div>
+    </nav>
+
+    <main class="admin-page lab-page" data-api-url="{% url 'admin_lab_objects_api' %}" data-csv-url="{% url 'admin_lab_objects_export_csv' %}" data-pdf-url="{% url 'admin_lab_objects_export_pdf' %}">
+        <section class="admin-header-row">
+            <div>
+                <span class="eyebrow">Laboratorio</span>
+                <h1>Objetos laboratorio</h1>
+                <p>Cadastre, edite, remova, busque e exporte objetos genericos do laboratorio.</p>
+            </div>
+            <a href="{% url 'admin_config_home' %}" class="secondary-link">Voltar ao painel</a>
+        </section>
+
+        <section class="admin-panel">
+            <h2 id="lab-form-title">Adicionar objeto</h2>
+            <form id="lab-object-form" class="admin-form" novalidate>
+                {% csrf_token %}
+                <input type="hidden" id="object-id" name="object_id">
+
+                <label for="nome">
+                    Nome
+                    <input type="text" id="nome" name="nome" maxlength="120" required>
+                    <span class="field-error" data-error-for="nome"></span>
+                </label>
+
+                <label for="condicao">
+                    Condicao
+                    <select id="condicao" name="condicao" required>
+                        <option value="">Selecione</option>
+                        {% for value, label in condicao_choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="field-error" data-error-for="condicao"></span>
+                </label>
+
+                <label for="quantidade">
+                    Quantidade
+                    <input type="number" id="quantidade" name="quantidade" min="0" step="1" value="0" required>
+                    <span class="field-error" data-error-for="quantidade"></span>
+                </label>
+
+                <label for="descricao">
+                    Descricao
+                    <textarea id="descricao" name="descricao" rows="4"></textarea>
+                    <span class="field-error" data-error-for="descricao"></span>
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-button" id="save-object-button">Salvar objeto</button>
+                    <button type="button" class="secondary-button" id="reset-form-button">Limpar</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="admin-panel">
+            <div class="lab-toolbar">
+                <form id="lab-search-form" class="lab-search" role="search">
+                    <label for="lab-search-input">Buscar por nome</label>
+                    <div>
+                        <input type="search" id="lab-search-input" name="q" placeholder="Digite o nome do objeto">
+                        <button type="submit" class="secondary-button">Buscar</button>
+                    </div>
+                </form>
+
+                <div class="export-actions">
+                    <a href="{% url 'admin_lab_objects_export_csv' %}" class="secondary-button" id="export-csv-link">CSV</a>
+                    <a href="{% url 'admin_lab_objects_export_pdf' %}" class="secondary-button" id="export-pdf-link">PDF</a>
+                </div>
+            </div>
+
+            <div class="status-message" id="lab-status" role="status" aria-live="polite"></div>
+
+            <div class="responsive-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Condicao</th>
+                            <th>Quantidade</th>
+                            <th>Descricao</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lab-objects-table">
+                        <tr>
+                            <td colspan="6">Carregando objetos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="{% static 'accounts/js/lab_objects.js' %}"></script>
+</body>
+</html>

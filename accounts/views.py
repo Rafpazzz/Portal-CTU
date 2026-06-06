@@ -3,21 +3,20 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as auth_login
 from django.utils.http import url_has_allowed_host_and_scheme
-from .admin import CustomUserCreationForm
-from .forms import AdminBookForm, AdminUserCreateForm, AdminUserUpdateForm
+from .forms import AdminBookForm, AdminUserCreateForm, AdminUserUpdateForm, RegisterUserForm
 from django.contrib import messages
 from book.models import Books
 from reviews.models import Review
+from laboratory.models import ObjetoLaboratorio
 
 # Create your views here.
 
 def register(request):
-    form = CustomUserCreationForm()
+    form = RegisterUserForm()
     if request.method == 'POST':    
-        form = CustomUserCreationForm(request.POST)
+        form = RegisterUserForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
+            form.save()
             messages.success(request, 'Account created successfully')
             return redirect('all_books')
 
@@ -79,6 +78,7 @@ def system_config_home(request):
     return render(request, 'admin_config/home.html', {
         'books_count': Books.objects.count(),
         'users_count': get_user_model().objects.count(),
+        'lab_objects_count': ObjetoLaboratorio.objects.count(),
     })
 
 
@@ -189,7 +189,7 @@ def manage_users(request):
 
     return render(request, 'admin_config/manage_users.html', {
         'action': action,
-        'users': User.objects.all().order_by('username'),
+        'users': User.objects.select_related('profile').all().order_by('username'),
         'form': form,
         'selected_user': selected_user,
     })

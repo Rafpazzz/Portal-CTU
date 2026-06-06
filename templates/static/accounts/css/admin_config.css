@@ -106,7 +106,7 @@ h2 {
 
 .admin-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
 }
 
@@ -286,7 +286,8 @@ th {
 }
 
 .table-actions a,
-.table-actions span {
+.table-actions span,
+.table-actions button {
     color: #176b87;
     font-weight: 700;
     text-decoration: none;
@@ -298,7 +299,8 @@ th {
 }
 
 .table-actions a,
-.table-actions span {
+.table-actions span,
+.table-actions button {
     min-width: 92px;
     min-height: 36px;
     padding: 8px 12px;
@@ -306,9 +308,12 @@ th {
     border-radius: 6px;
     background: #ffffff;
     text-align: center;
+    cursor: pointer;
+    font: inherit;
 }
 
-.table-actions a:hover {
+.table-actions a:hover,
+.table-actions button:hover {
     border-color: #176b87;
     background: #eff6ff;
 }
@@ -321,6 +326,64 @@ th {
 .table-actions .danger-text:hover {
     border-color: #b91c1c;
     background: #fee2e2;
+}
+
+.lab-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.lab-search {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: min(520px, 100%);
+    font-weight: 700;
+}
+
+.lab-search > div,
+.export-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.lab-search input {
+    flex: 1;
+    min-width: 220px;
+    min-height: 40px;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.field-error {
+    min-height: 18px;
+    color: #b91c1c;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.status-message {
+    min-height: 22px;
+    margin: 10px 0;
+    font-weight: 700;
+}
+
+.status-message.success {
+    color: #166534;
+}
+
+.status-message.error {
+    color: #991b1b;
+}
+
+.lab-page td:nth-child(5) {
+    max-width: 320px;
 }
 
 .messages p {
@@ -358,6 +421,11 @@ th {
     .admin-grid,
     .admin-form {
         grid-template-columns: 1fr;
+    }
+
+    .lab-toolbar {
+        align-items: stretch;
+        flex-direction: column;
     }
 
     .admin-hero,

@@ -88,6 +88,8 @@
                         <tr>
                             <th>Usuario</th>
                             <th>Email</th>
+                            <th>Matricula</th>
+                            <th>Sexo</th>
                             <th>Admin</th>
                             <th>Ativo</th>
                             <th>Acoes</th>
@@ -98,6 +100,8 @@
                         <tr>
                             <td>{{ item.username }}</td>
                             <td>{{ item.email|default:"-" }}</td>
+                            <td>{{ item.profile.matricula|default:"-" }}</td>
+                            <td>{{ item.profile.get_sexo_display|default:"-" }}</td>
                             <td>{% if item.is_staff %}Sim{% else %}Nao{% endif %}</td>
                             <td>{% if item.is_active %}Sim{% else %}Nao{% endif %}</td>
                             <td class="table-actions">
@@ -111,7 +115,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5">Nenhum usuario cadastrado.</td>
+                            <td colspan="7">Nenhum usuario cadastrado.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
