@@ -49,8 +49,8 @@
             errors.condicao = ['Selecione a condicao.'];
         }
 
-        if (!Number.isInteger(quantidade) || quantidade < 0) {
-            errors.quantidade = ['Informe uma quantidade inteira maior ou igual a zero.'];
+        if (!Number.isInteger(quantidade) || quantidade <= 0) {
+            errors.quantidade = ['Informe uma quantidade inteira maior que zero.'];
         }
 
         setErrors(errors);
@@ -70,7 +70,7 @@
     function resetForm() {
         form.reset();
         form.object_id.value = '';
-        form.quantidade.value = '0';
+        form.quantidade.value = '1';
         formTitle.textContent = 'Adicionar objeto';
         clearErrors();
     }

@@ -5,7 +5,11 @@ import json
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.http import require_http_methods
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from accounts.views import is_system_admin
 
@@ -62,52 +66,52 @@ def _form_errors(form):
     }
 
 
-def _pdf_escape(value):
-    return str(value).replace('\\', '\\\\').replace('(', '\\(').replace(')', '\\)')
-
-
-def _build_simple_pdf(lines):
-    y = 790
-    commands = ['BT', '/F1 11 Tf', '40 810 Td', '(Objetos de Laboratorio) Tj']
-
-    for line in lines:
-        if y < 45:
-            break
-
-        commands.append(f'40 {y} Td ({_pdf_escape(line[:105])}) Tj')
-        y -= 16
-
-    commands.append('ET')
-    stream = '\n'.join(commands).encode('latin-1', errors='replace')
-
-    objects = [
-        b'1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n',
-        b'2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n',
-        b'3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj\n',
-        b'4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n',
-        b'5 0 obj << /Length ' + str(len(stream)).encode('ascii') + b' >> stream\n' + stream + b'\nendstream endobj\n',
+def _build_lab_objects_pdf(objects):
+    buffer = io.BytesIO()
+    document = SimpleDocTemplate(
+        buffer,
+        pagesize=landscape(A4),
+        pageCompression=0,
+        rightMargin=24,
+        leftMargin=24,
+        topMargin=24,
+        bottomMargin=24,
+        title='Objetos de Laboratorio',
+    )
+    styles = getSampleStyleSheet()
+    normal_style = styles['BodyText']
+    elements = [
+        Paragraph('Objetos de Laboratorio', styles['Title']),
+        Spacer(1, 12),
     ]
-
-    pdf = io.BytesIO()
-    pdf.write(b'%PDF-1.4\n')
-    offsets = []
+    table_data = [['ID', 'Nome', 'Condicao', 'Quantidade', 'Descricao']]
 
     for obj in objects:
-        offsets.append(pdf.tell())
-        pdf.write(obj)
+        table_data.append([
+            str(obj.id),
+            Paragraph(obj.nome, normal_style),
+            obj.get_condicao_display(),
+            str(obj.quantidade),
+            Paragraph(obj.descricao or '-', normal_style),
+        ])
 
-    xref_position = pdf.tell()
-    pdf.write(f'xref\n0 {len(objects) + 1}\n'.encode('ascii'))
-    pdf.write(b'0000000000 65535 f \n')
-
-    for offset in offsets:
-        pdf.write(f'{offset:010d} 00000 n \n'.encode('ascii'))
-
-    pdf.write(
-        f'trailer << /Size {len(objects) + 1} /Root 1 0 R >>\n'
-        f'startxref\n{xref_position}\n%%EOF'.encode('ascii')
-    )
-    return pdf.getvalue()
+    table = Table(table_data, repeatRows=1, colWidths=[42, 170, 90, 82, 360])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#12395b')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor('#cbd5e1')),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f8fafc')]),
+        ('LEFTPADDING', (0, 0), (-1, -1), 6),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    elements.append(table)
+    document.build(elements)
+    return buffer.getvalue()
 
 
 @user_passes_test(is_system_admin, login_url='login')
@@ -176,11 +180,7 @@ def export_lab_objects_csv(request):
 def export_lab_objects_pdf(request):
     search = request.GET.get('q', '').strip()
     objects = _lab_objects_queryset(search)[:MAX_EXPORT_ITEMS]
-    lines = [
-        f'#{obj.id} | {obj.nome} | {obj.get_condicao_display()} | qtd: {obj.quantidade} | {obj.descricao}'
-        for obj in objects
-    ]
 
-    response = HttpResponse(_build_simple_pdf(lines), content_type='application/pdf')
+    response = HttpResponse(_build_lab_objects_pdf(objects), content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="objetos_laboratorio.pdf"'
     return response

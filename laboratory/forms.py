@@ -16,3 +16,9 @@ class ObjetoLaboratorioForm(forms.ModelForm):
         if not nome:
             raise forms.ValidationError('Informe o nome do objeto.')
         return nome
+
+    def clean_quantidade(self):
+        quantidade = self.cleaned_data['quantidade']
+        if quantidade <= 0:
+            raise forms.ValidationError('Informe uma quantidade maior que zero.')
+        return quantidade

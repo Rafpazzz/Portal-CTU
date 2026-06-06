@@ -91,7 +91,7 @@ class LabObjectsAdminTests(TestCase):
             data=json.dumps({
                 'nome': '',
                 'condicao': '',
-                'quantidade': -1,
+                'quantidade': 0,
                 'descricao': 'Entrada invalida.',
             }),
             content_type='application/json',
@@ -149,3 +149,4 @@ class LabObjectsAdminTests(TestCase):
         self.assertEqual(pdf_response.status_code, 200)
         self.assertEqual(pdf_response['Content-Type'], 'application/pdf')
         self.assertTrue(pdf_response.content.startswith(b'%PDF-1.4'))
+        self.assertIn(b'Microscopio', pdf_response.content)
