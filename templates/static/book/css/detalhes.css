@@ -90,10 +90,10 @@ body {
 .detail-card {
     background: white;
     width: 100%;
-    max-width: 850px;
-    border-radius: 20px;
+    max-width: 1080px;
+    border-radius: 16px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-    padding: 50px;
+    padding: 42px;
     box-sizing: border-box;
     position: relative;
     animation: fadeIn 0.6s ease-out;
@@ -110,36 +110,57 @@ body {
     }
 }
 
+.book-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1.35fr);
+    gap: 32px;
+    align-items: stretch;
+    margin-bottom: 42px;
+}
+
+.book-meta-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 30px;
+    border: 1px solid #e5edf3;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+}
+
 .header-detail {
-    text-align: center;
-    margin-bottom: 40px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 30px;
+    text-align: left;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e5edf3;
+    padding-bottom: 24px;
+}
+
+.detail-kicker {
+    display: block;
+    margin-bottom: 10px;
+    color: #0083b0;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .header-detail h1 {
     color: #2c3e50;
     margin: 0;
-    font-size: 3rem;
-    letter-spacing: -1px;
-}
-
-.header-detail .author {
-    color: #0083b0;
-    margin-top: 10px;
-    font-size: 1.4rem;
-    font-weight: 500;
+    font-size: clamp(2rem, 4vw, 3.15rem);
+    line-height: 1.04;
+    letter-spacing: 0;
 }
 
 .info-grid {
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-    margin-bottom: 40px;
+    display: grid;
+    gap: 18px;
+    margin-bottom: 0;
 }
 
 .info-item {
-    text-align: center;
+    text-align: left;
 }
 
 .info-item strong {
@@ -152,17 +173,21 @@ body {
 }
 
 .info-item span {
-    font-size: 1.3rem;
+    display: block;
+    font-size: 1.08rem;
+    line-height: 1.35;
     color: #34495e;
     font-weight: bold;
 }
 
 .resumo-section {
+    display: flex;
+    flex-direction: column;
     background-color: #f9fbfd;
-    padding: 30px;
-    border-radius: 12px;
+    padding: 32px;
+    border-radius: 14px;
     border-left: 5px solid #0083b0;
-    margin-bottom: 40px;
+    margin-bottom: 0;
 }
 
 .resumo-section h2 {
@@ -176,9 +201,162 @@ body {
 
 .resumo-text {
     font-size: 1.1rem;
-    line-height: 1.8;
+    line-height: 1.75;
     color: #555;
     text-align: justify;
+}
+
+.reviews-section {
+    margin-bottom: 40px;
+}
+
+.reviews-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.reviews-heading h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reviews-heading span {
+    color: #0083b0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.reviews-list {
+    display: grid;
+    gap: 14px;
+}
+
+.review-item,
+.empty-reviews {
+    margin: 0;
+    padding: 18px;
+    border: 1px solid #e5edf3;
+    border-radius: 12px;
+    background: #f9fbfd;
+}
+
+.review-meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.review-meta div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.review-meta strong {
+    color: #263947;
+    font-size: 1rem;
+}
+
+.review-meta span {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.review-rating {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #e0f7fa;
+    color: #006d94 !important;
+    font-weight: 800;
+}
+
+.review-item p {
+    margin: 0;
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.empty-reviews {
+    color: #586875;
+    font-weight: 600;
+}
+
+.reviews-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #e5edf3;
+}
+
+.pagination-pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.pagination-link,
+.pagination-page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid #d7e3ec;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #006d94;
+    font-size: 0.92rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.pagination-link:hover,
+.pagination-page:hover {
+    border-color: #0083b0;
+    background: #e0f7fa;
+    transform: translateY(-1px);
+}
+
+.pagination-page.active {
+    border-color: #0083b0;
+    background: #0083b0;
+    color: #ffffff;
+}
+
+.pagination-page.ellipsis {
+    border-color: transparent;
+    background: transparent;
+    color: #7f8c8d;
+}
+
+.pagination-link.disabled {
+    color: #9aa9b5;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.pagination-link.disabled:hover {
+    border-color: #d7e3ec;
+    background: #ffffff;
+    transform: none;
 }
 
 /* =========================================
@@ -231,7 +409,33 @@ body {
 }
 
 /* Responsividade */
+@media (max-width: 860px) {
+    .detail-card {
+        padding: 28px;
+    }
+
+    .book-detail-layout {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .book-meta-panel,
+    .resumo-section {
+        padding: 24px;
+    }
+}
+
 @media (max-width: 600px) {
+    .detail-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .book-meta-panel,
+    .resumo-section {
+        padding: 20px;
+    }
+
     .card-actions {
         flex-direction: column-reverse;
         gap: 15px;
@@ -243,11 +447,26 @@ body {
         justify-content: center;
     }
     
-    .info-grid {
-        gap: 30px;
-    }
-    
     .header-detail h1 {
         font-size: 2rem;
+    }
+
+    .resumo-text {
+        text-align: left;
+    }
+
+    .reviews-heading,
+    .review-meta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .reviews-pagination {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .pagination-link {
+        width: 100%;
     }
 }
