@@ -1,40 +1,127 @@
-# Site de Reviews de Livros
+# Portal CTU
 
-Este projeto pessoal consistem em um site pode armazenar em um baco de dados varios livros e os usuarios podem escrever avaliações sobre oque acham do livro e tambem escolher um rating para cada livro
+Sistema web em Django para cadastro, consulta e avaliação de livros, com área administrativa para gerenciar livros, usuários e objetos de laboratório.
 
-Esse site consite em um CRUD que o usuario pode adcionar sua avaliação, atualiza-la e excluir-la.
+## Funcionalidades
 
-#Tecnologias utilizadas 
-  -Python
-  -Django
-  -MySQLWorkbanch
+- Listagem pública de livros na home.
+- Busca de livros para usuários autenticados.
+- Página de detalhes do livro.
+- Cadastro, edição, visualização e remoção de avaliações.
+- Cadastro e perfil de usuários.
+- Painel administrativo interno para:
+  - gerenciar livros;
+  - gerenciar usuários;
+  - gerenciar objetos de laboratório;
+  - exportar dados de objetos de laboratório em CSV/PDF.
 
-#Detalhes de Desenvolvimento
-O sistema possue uma altenticação basica ja presente no Django e as pagias que o usuario navegam possuem uma camada que somete os logados podem acessar.
+## Tecnologias
 
+- Python 3.12
+- Django 6.0.1
+- PostgreSQL
+- python-dotenv
+- psycopg
+- reportlab
 
+## Estrutura
 
-SITE_REVIEW_LIVROS/
-├── 📂 setup/                # ⚙️ Coração do projeto (Configurações Globais)
-│   ├── settings.py          # Configurações de banco de dados, apps instalados e segurança
-│   ├── urls.py              # Roteamento principal (a "portaria" das URLs)
-│   └── asgi.py / wsgi.py    # Pontos de entrada para o servidor web
-│
-├── 📂 accounts/             # 👤 Módulo de Gestão de Usuários
-│   ├── models.py            # Tabelas de usuários (se houver customização)
-│   ├── views.py             # Lógica de Login, Cadastro e Logout
-│   └── templates/           # Páginas HTML de login/registro
-│
-├── 📂 book/                 # 📚 Módulo de Catálogo de Livros
-│   ├── models.py            # Definição da estrutura do Livro (Título, Autor, etc.)
-│   ├── views.py             # Lógica de listagem e detalhes dos livros
-│   └── urls.py              # Rotas específicas de livros (ex: /livro/1)
-│
-├── 📂 reviews/              # ⭐ Módulo de Avaliações/Resenhas
-│   ├── models.py            # Tabela que liga Usuário + Livro + Nota
-│   ├── forms.py             # Formulário para escrever a resenha
-│   └── views.py             # Lógica para salvar e exibir comentários
-│
-├── 📂 django/               # Ambiente Virtual do Python para dowload das bibliotecas
-├── db.sqlite3               # Banco de dados local (desenvolvimento)
-└── manage.py                # Script utilitário do Django (rodar server, criar migrations)
+```text
+Portal-CTU/
+├── accounts/                 # Login, cadastro, perfil e telas administrativas
+├── book/                     # Catálogo, busca e detalhes dos livros
+├── laboratory/               # Gestão de objetos de laboratório
+├── reviews/                  # Avaliações dos livros
+├── setup/                    # Configurações globais do Django
+├── templates/static/         # CSS e JavaScript estáticos
+├── manage.py                 # Utilitário principal do Django
+├── requirements.txt          # Dependências Python
+└── .env.example              # Exemplo de configuração local
+```
+
+## Configuração Local
+
+1. Crie ou atualize o ambiente virtual:
+
+```bash
+python3 -m venv venv
+```
+
+2. Ative o ambiente:
+
+```bash
+source venv/bin/activate
+```
+
+3. Instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Configure as variáveis de ambiente:
+
+```bash
+cp .env.example .env
+```
+
+Edite o arquivo `.env` com os dados do seu PostgreSQL:
+
+```env
+DB_NAME=site_review_livros
+DB_USER=postgres
+DB_PASSWORD=SUA_SENHA
+DB_HOST=127.0.0.1
+DB_PORT=5432
+```
+
+Se o banco ainda não existir, crie-o no PostgreSQL antes de rodar as migrações.
+
+5. Aplique as migrações:
+
+```bash
+python manage.py migrate
+```
+
+6. Inicie o servidor:
+
+```bash
+python manage.py runserver
+```
+
+Acesse:
+
+```text
+http://127.0.0.1:8000/
+```
+
+## Comandos Úteis
+
+Rodar checagem do Django:
+
+```bash
+python manage.py check
+```
+
+Criar superusuário:
+
+```bash
+python manage.py createsuperuser
+```
+
+Criar novas migrações depois de alterar modelos:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+## Observações
+
+- O projeto usa PostgreSQL configurado por variáveis no `.env`.
+- O diretório `venv/` não deve ser versionado.
+- Se a pasta do projeto for renomeada e scripts do `venv/bin` ficarem apontando para o caminho antigo, recrie ou atualize o ambiente virtual com:
+
+```bash
+python3 -m venv --upgrade venv
+```
