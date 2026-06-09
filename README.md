@@ -71,7 +71,7 @@ Edite o arquivo `.env` com os dados do seu PostgreSQL:
 
 #Para rodar o banco localmente
 
-DB_NAME=portal_ctu
+DB_NAME=bd_name
 DB_USER=seu_user
 DB_PASSWORD=SUA_SENHA
 DB_HOST=127.0.0.1
