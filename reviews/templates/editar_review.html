@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Avaliação - {{ book.titulo }}</title>
-    <link rel="stylesheet" href="{% static 'review/css/edit_review.css' %}">
+    <link rel="stylesheet" href="{% static 'review/css/editar_review.css' %}">
+    <link rel="stylesheet" href="{% static 'shared/css/navbar.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -17,10 +18,10 @@
         
         <div class="navbar-links">
             <a href="{% url 'search_book' %}" class="nav-item">🔍 Buscar Livro</a>
+        </div>
 
+        <div class="navbar-user">
             {% if user.is_authenticated %}
-                <span class="user-welcome">Olá, {{ user.username }}</span>
-                
                 <a href="{% url 'perfil' %}" class="nav-item">Meu Perfil</a>
                 
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Livros - Livros UESPI</title>
     <link rel="stylesheet" href="{% static 'accounts/css/admin_config.css' %}">
+    <link rel="stylesheet" href="{% static 'shared/css/navbar.css' %}">
 </head>
 <body>
     <nav class="admin-navbar">
@@ -14,6 +15,10 @@
             <a href="{% url 'admin_config_home' %}">Painel</a>
             <a href="{% url 'admin_users' %}">Usuarios</a>
             <a href="{% url 'home' %}">Site</a>
+        </div>
+
+        <div class="navbar-user">
+            <a href="{% url 'perfil' %}" class="nav-item">Perfil</a>
         </div>
     </nav>
 

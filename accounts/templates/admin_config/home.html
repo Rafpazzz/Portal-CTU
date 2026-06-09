@@ -6,16 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuracoes - Livros UESPI</title>
     <link rel="stylesheet" href="{% static 'accounts/css/admin_config.css' %}">
+    <link rel="stylesheet" href="{% static 'shared/css/navbar.css' %}">
 </head>
 <body>
     <nav class="admin-navbar">
         <a href="{% url 'home' %}" class="admin-brand">Livros UESPI</a>
         <div class="admin-navlinks">
             <a href="{% url 'home' %}">Inicio</a>
-            <a href="{% url 'perfil' %}">Perfil</a>
+        </div>
+
+        <div class="navbar-user">
+            <a href="{% url 'perfil' %}" class="nav-item">Perfil</a>
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
-                <button type="submit">Sair</button>
+                <button type="submit" class="nav-item btn-logout">Sair</button>
             </form>
         </div>
     </nav>
