@@ -68,11 +68,14 @@ cp .env.example .env
 Edite o arquivo `.env` com os dados do seu PostgreSQL:
 
 ```env
+
+#Para rodar o banco localmente
+
 DB_NAME=site_review_livros
-DB_USER=postgres
+DB_USER=seu_user
 DB_PASSWORD=SUA_SENHA
 DB_HOST=127.0.0.1
-DB_PORT=5432
+DB_PORT=sua_porta
 ```
 
 Se o banco ainda não existir, crie-o no PostgreSQL antes de rodar as migrações.
