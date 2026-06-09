@@ -37,28 +37,88 @@
 
     <div class="detail-card">
 
-        <div class="header-detail">
-            <h1>{{ book.titulo }}</h1>
-            <div class="author">por {{ book.autor }}</div>
-        </div>
+        <section class="book-detail-layout">
+            <div class="book-meta-panel">
+                <div class="header-detail">
+                    <span class="detail-kicker">Livro</span>
+                    <h1>{{ book.titulo }}</h1>
+                </div>
 
-        <div class="info-grid">
-            <div class="info-item">
-                <strong>Editora</strong>
-                <span>{{ book.editora }}</span>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Autor</strong>
+                        <span>{{ book.autor }}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Editora</strong>
+                        <span>{{ book.editora }}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Ano</strong>
+                        <span>{{ book.ano_publicacao }}</span>
+                    </div>
+                </div>
             </div>
-            <div class="info-item">
-                <strong>Ano</strong>
-                <span>{{ book.ano_publicacao }}</span>
-            </div>
-        </div>
 
-        <div class="resumo-section">
-            <h2>Sinopse</h2>
-            <div class="resumo-text">
-                {{ book.resumo|linebreaks }}
+            <div class="resumo-section">
+                <h2>Sinopse</h2>
+                <div class="resumo-text">
+                    {{ book.resumo|linebreaks }}
+                </div>
             </div>
-        </div>
+        </section>
+
+        <section class="reviews-section" aria-label="Avaliacoes de {{ book.titulo }}">
+            <div class="reviews-heading">
+                <h2>Analises dos usuarios</h2>
+                <span>{{ reviews_count }} analise{% if reviews_count != 1 %}s{% endif %}</span>
+            </div>
+
+            <div class="reviews-list">
+                {% for review in reviews_page %}
+                    <article class="review-item">
+                        <div class="review-meta">
+                            <div>
+                                <strong>{{ review.autor.username }}</strong>
+                                <span>{{ review.created_at|date:"d/m/Y" }}</span>
+                            </div>
+                            <span class="review-rating">{{ review.rating }}/5</span>
+                        </div>
+                        <p>{{ review.review_text }}</p>
+                    </article>
+                {% empty %}
+                    <p class="empty-reviews">Ainda nao ha analises para este livro.</p>
+                {% endfor %}
+            </div>
+
+            {% if reviews_page.paginator.num_pages > 1 %}
+                <nav class="reviews-pagination" aria-label="Paginacao de avaliacoes">
+                    {% if reviews_page.has_previous %}
+                        <a href="?page={{ reviews_page.previous_page_number }}" class="pagination-link">Anterior</a>
+                    {% else %}
+                        <span class="pagination-link disabled">Anterior</span>
+                    {% endif %}
+
+                    <div class="pagination-pages">
+                        {% for page_number in reviews_page_range %}
+                            {% if page_number == reviews_page.paginator.ELLIPSIS %}
+                                <span class="pagination-page ellipsis">{{ page_number }}</span>
+                            {% elif page_number == reviews_page.number %}
+                                <span class="pagination-page active">{{ page_number }}</span>
+                            {% else %}
+                                <a href="?page={{ page_number }}" class="pagination-page">{{ page_number }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    {% if reviews_page.has_next %}
+                        <a href="?page={{ reviews_page.next_page_number }}" class="pagination-link">Proxima</a>
+                    {% else %}
+                        <span class="pagination-link disabled">Proxima</span>
+                    {% endif %}
+                </nav>
+            {% endif %}
+        </section>
 
         <div class="card-actions">
             <a href="{% url 'search_book' %}" class="btn-voltar">
